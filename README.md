@@ -27,7 +27,7 @@ const io = socketIO(9090);
 
 It is time to use `socket.io-manager`, it is easy.
 
-Create a file and name it `foo.js` and import then set up the socket router like below.
+Create a file and name it `foo.js` and import `socket.io-manager` then set up the socket router like below.
 
 ```javascript
 // socket/foo.js
