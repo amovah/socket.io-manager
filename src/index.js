@@ -1,14 +1,12 @@
 import 'babel-polyfill';
 import promisify from './promisify';
 
-export class Socket {
+export class Router {
   constructor(namespace = '/') {
     this.namespace = namespace;
     this._name = '';
     this.middles = [];
     this._handler = () => {};
-
-    this.attach = this.attach.bind(this);
   }
 
   name(name) {
@@ -36,6 +34,28 @@ export class Socket {
 
     Promise.all(middles).then(() => {
       handler(socket, nsp, io)(...args);
+    });
+  }
+}
+
+export function combine(io, sockets) {
+  let group = sockets.reduce((acc, cur) => {
+    if (!acc[cur.namespace]) {
+      acc[cur.namespace] = [];
+    }
+
+    acc[cur.namespace].push(cur);
+
+    return acc;
+  }, {});
+
+  for (let [namespace, routers] of Object.entries(group)) {
+    let nsp = io.of(namespace);
+
+    nsp.on('connection', socket => {
+      for (let router of routers) {
+        socket.on(router._name, router.attach.bind(router, socket, nsp, io));
+      }
     });
   }
 }
