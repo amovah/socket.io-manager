@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import promisify from './promisify';
 
 export class Router {
