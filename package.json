@@ -1,0 +1,40 @@
+{
+  "name": "socket.io-manager",
+  "version": "0.0.0",
+  "description": "manage your socket events easily",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amovah/socket.io-manager.git"
+  },
+  "keywords": [],
+  "author": "Ali Movahedi <ali_movahedi@aol.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amovah/socket.io-manager/issues"
+  },
+  "homepage": "https://github.com/amovah/socket.io-manager#readme",
+  "files": [
+    "build"
+  ],
+  "directories": {
+    "lib": "src"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.6.1",
+    "del": "^3.0.0",
+    "eslint": "^4.15.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-eslint": "^4.0.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
+  }
+}
