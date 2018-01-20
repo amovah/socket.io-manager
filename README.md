@@ -61,3 +61,60 @@ connect(io, [foo]);
 ```
 
 It's done. we can organize our socket like this now. I hope you enjoy it.
+
+## API
+
+### `class` router
+
+Create a socket router with this class.
+
+#### Usage
+
+```javascript
+let router = new Router(namespace);
+```
+
+#### Parameters
+
+* `namespace`: type `String`, default `/`, `optional`. socket namespace.
+
+#### Methods
+
+* `name(name)`: set event name for this routers.
+  * `name`: type `String`, `required`. event name.
+* `middle(middles)`: add middlewares for this event.
+  * `middles`: type `Array`, `required`. middlewares.
+
+    How to write a middleware ? it's simple. first look at this example.
+
+    ```javascript
+    export default (next, socket, nsp, io) => (user, msg) => {
+      socket.user = user;
+      msg = msg + user.name;
+
+      next();
+    }
+    ```
+
+    first, it takes 4 arguments, `next` calls next middleware or handler. `socket` obviously is socket object. `nsp` is current namespace `scoket.io` object. `io` is main `socket.io` object.
+
+    then it return a function that this function take some arguments. these are event data. for example if in client side I run this code, `socket.emit('foo', { name: 'ali' }, 'hey there')`, the second function take 2 arguments based on what I've sent to the event. `user` argument is `{ name: 'ali' }` and `msg` is `hey there`.
+
+    that's all.
+
+* `handler(handler)`: it's main socket handler.
+  * `handler`: type `Function`,  `required`.
+
+  it looks like middleware function with little difference, it doesn't have `next` argument.
+
+### connect
+
+#### Usage
+```javascript
+connect(io, sockets);
+```
+
+#### Parameters
+
+* `io`: `socket.io` server class.
+* `sockets`: type `Array`, `required`. array of socket routers created by `Socket` class.
