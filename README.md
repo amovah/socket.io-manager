@@ -25,19 +25,21 @@ import socketIO from 'socket.io';
 const io = socketIO(9090);
 ```
 
-It is time to use `socket.io-manager`, it is easy.
+It is time to use `socket.io-manager`.
 
-Create a file and name it `foo.js` and import `socket.io-manager` then set up the socket router like below.
+Create a file and name it `foo.js` and import `SocketEvent` from `socket.io-manager` and then set up the socket event manager like below.
 
 ```javascript
-// socket/foo.js
-import { Router } from 'socket.io-manager';
+// foo.js
+import { SocketEvent } from 'socket.io-manager';
 
-let router = new Router();
+let socket = new SocketEvent();
 
-router
+// default namespace is '/', if you want change, use SocketEvent.namespace method.
+
+socket
 .name('foo')
-.middles(
+.guard(
   (next, socket) => text => {
     text === 'you can' ? next() : socket.emit('error', 'I can not do it');
   }
@@ -46,7 +48,7 @@ router
 });
 ```
 
-now let's back to our `index.js` and import our socket router. we can connect `io` and our socket routers together with `connect` function provided by `socket.io-manager`.
+now let's back to our `index.js` and import our socket event manager. we can connect `io` and our socket events together with `connect` function provided by `socket.io-manager`.
 
 ```javascript
 // index.js
@@ -64,26 +66,22 @@ It's done. we can organize our socket like this now. I hope you enjoy it.
 
 ## API
 
-### `class` router
-
-Create a socket router with this class.
+### `class` SocketEvent
 
 #### Usage
 
 ```javascript
-let router = new Router(namespace);
+let socket = new SocketEvent();
 ```
-
-#### Parameters
-
-* `namespace`: type `String`, default `/`, `optional`. socket namespace.
 
 #### Methods
 
+* `namespace(namespace)`: set namespace.  default value of namespace is `/`, if you don't want to change namespace don't call this method.
+  * `namespace`: type `String`, `required`.
 * `name(name)`: set event name for this routers.
   * `name`: type `String`, `required`. event name.
-* `middle(middles)`: add middlewares for this event.
-  * `middles`: type `Array`, `required`. middlewares.
+* `guard(guards)`: add middlewares for this event.
+  * `guards`: type `Array`, `required`. middlewares.
 
     How to write a middleware ? it's simple. first look at this example.
 
@@ -117,4 +115,4 @@ connect(io, sockets);
 #### Parameters
 
 * `io`: `socket.io` server class.
-* `sockets`: type `Array`, `required`. array of socket routers created by `Socket` class.
+* `sockets`: type `Array`, `required`. array of socket events created by `SocketEvent` class.

@@ -1,11 +1,17 @@
 import promisify from './promisify';
 
-export class Router {
-  constructor(namespace = '/') {
-    this.namespace = namespace;
+export class SocketEvent {
+  constructor() {
+    this._namespace = '/';
     this._name = '';
-    this.middles = [];
+    this.guards = [];
     this._handler = () => {};
+  }
+
+  namespace(namespace) {
+    this._namespace = namespace;
+
+    return this;
   }
 
   name(name) {
@@ -14,8 +20,8 @@ export class Router {
     return this;
   }
 
-  middle(...args) {
-    this.middles.push(...args);
+  guard(...args) {
+    this.guards.push(...args);
 
     return this;
   }
@@ -25,13 +31,13 @@ export class Router {
   }
 
   attach(socket, nsp, io, ...args) {
-    let middles = this.middles.map(
-      middle => promisify(middle)(socket, nsp, io, ...args)
+    let guards = this.guards.map(
+      guard => promisify(guard)(socket, nsp, io, ...args)
     );
 
     let handler = this._handler;
 
-    Promise.all(middles).then(() => {
+    Promise.all(guards).then(() => {
       handler(socket, nsp, io)(...args);
     });
   }
@@ -48,12 +54,15 @@ export function connect(io, sockets) {
     return acc;
   }, {});
 
-  for (let [namespace, routers] of Object.entries(group)) {
+  for (let [namespace, socketEvents] of Object.entries(group)) {
     let nsp = io.of(namespace);
 
     nsp.on('connection', socket => {
-      for (let router of routers) {
-        socket.on(router._name, router.attach.bind(router, socket, nsp, io));
+      for (let socketEvent of socketEvents) {
+        socket.on(
+          socketEvent._name,
+          socketEvent.attach.bind(socketEvent, socket, nsp, io)
+        );
       }
     });
   }
