@@ -67,3 +67,12 @@ export function connect(io, sockets) {
     });
   }
 }
+
+export function applyGuards(guards, sockets) {
+  return sockets.map(
+    item => {
+      item.guards.unshift(...guards);
+      return guards;
+    }
+  );
+}

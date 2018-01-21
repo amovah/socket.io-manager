@@ -116,3 +116,24 @@ connect(io, sockets);
 
 * `io`: `socket.io` server class.
 * `sockets`: type `Array`, `required`. array of socket events created by `SocketEvent` class.
+
+### applyGuards
+
+if you want to add same middlewares as head middlewares in socket events, it's better to use this function. this function add middlewares before all middlewares in socket events.
+
+#### Usage
+```javascript
+applyGuards(guards, socketsEvents);
+```
+
+#### Parameters
+* `guards`: type `Array`, `required`. array of middlewares to apply on socket events.
+* `socketEvents`: type `Array`, `required`. array of socket events.
+
+#### Example
+
+suppose that we have 2 guards (AKA middlewares) and one socket event named foo. now we want add these two guards in `foo` socket event. in code language it will be something like this:
+
+```javascript
+applyGuards([ guard1, guard2 ], [ foo ]);
+```
