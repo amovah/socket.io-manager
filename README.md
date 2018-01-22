@@ -39,7 +39,7 @@ let socket = new SocketEvent();
 
 socket
 .name('foo')
-.guard(
+.middleware(
   (next, socket) => text => {
     text === 'you can' ? next() : socket.emit('error', 'I can not do it');
   }
@@ -80,8 +80,8 @@ let socket = new SocketEvent();
   * `namespace`: type `String`, `required`.
 * `name(name)`: set event name for this routers.
   * `name`: type `String`, `required`. event name.
-* `guard(guards)`: add middlewares for this event.
-  * `guards`: type `Array`, `required`. middlewares.
+* `middleware(middlewares)`: add middlewares for this event.
+  * `middlewares`: type `Array`, `required`. middlewares.
 
     How to write a middleware ? it's simple. first look at this example.
 
@@ -117,23 +117,23 @@ connect(io, sockets);
 * `io`: `socket.io` server class.
 * `sockets`: type `Array`, `required`. array of socket events created by `SocketEvent` class.
 
-### applyGuards
+### applyMiddlewares
 
 if you want to add same middlewares as head middlewares in socket events, it's better to use this function. this function add middlewares before all middlewares in socket events.
 
 #### Usage
 ```javascript
-applyGuards(guards, socketsEvents);
+applyMiddlewares(middlewares, socketsEvents);
 ```
 
 #### Parameters
-* `guards`: type `Array`, `required`. array of middlewares to apply on socket events.
+* `middlewares`: type `Array`, `required`. array of middlewares to apply on socket events.
 * `socketEvents`: type `Array`, `required`. array of socket events.
 
 #### Example
 
-suppose that we have 2 guards (AKA middlewares) and one socket event named foo. now we want add these two guards in `foo` socket event. in code language it will be something like this:
+suppose that we have 2 middlewares (AKA middlewares) and one socket event named foo. now we want add these two middlewares in `foo` socket event. in code language it will be something like this:
 
 ```javascript
-applyGuards([ guard1, guard2 ], [ foo ]);
+applyMiddlewares([ middleware1, middleware2 ], [ foo ]);
 ```

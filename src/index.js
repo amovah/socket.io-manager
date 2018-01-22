@@ -4,7 +4,7 @@ export class SocketEvent {
   constructor() {
     this._namespace = '/';
     this._name = '';
-    this.guards = [];
+    this.middlewares = [];
     this._handler = () => {};
   }
 
@@ -20,8 +20,8 @@ export class SocketEvent {
     return this;
   }
 
-  guard(...args) {
-    this.guards.push(...args);
+  middleware(...args) {
+    this.middlewares.push(...args);
 
     return this;
   }
@@ -31,13 +31,13 @@ export class SocketEvent {
   }
 
   attach(socket, nsp, io, ...args) {
-    let guards = this.guards.map(
-      guard => promisify(guard)(socket, nsp, io, ...args)
+    let middlewares = this.middlewares.map(
+      middleware => promisify(middleware)(socket, nsp, io, ...args)
     );
 
     let handler = this._handler;
 
-    Promise.all(guards).then(() => {
+    Promise.all(middlewares).then(() => {
       handler(socket, nsp, io)(...args);
     });
   }
@@ -68,11 +68,11 @@ export function connect(io, sockets) {
   }
 }
 
-export function applyGuards(guards, sockets) {
+export function applyMiddlewares(middlewares, sockets) {
   return sockets.map(
     item => {
-      item.guards.unshift(...guards);
-      return guards;
+      item.middlewares.unshift(...middlewares);
+      return middlewares;
     }
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "socket.io-manager",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "description": "manage your socket events easily",
   "main": "build/index.js",
   "scripts": {
