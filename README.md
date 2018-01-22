@@ -132,7 +132,7 @@ applyMiddlewares(middlewares, socketsEvents);
 
 #### Example
 
-suppose that we have 2 middlewares (AKA middlewares) and one socket event named foo. now we want add these two middlewares in `foo` socket event. in code language it will be something like this:
+suppose that we have 2 middlewares and one socket event named foo. now we want add these two middlewares in `foo` socket event. in code language it will be something like this:
 
 ```javascript
 applyMiddlewares([ middleware1, middleware2 ], [ foo ]);
