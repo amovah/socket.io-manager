@@ -45,11 +45,11 @@ export class SocketEvent {
 
 export function connect(io, sockets) {
   let group = sockets.reduce((acc, cur) => {
-    if (!acc[cur.namespace]) {
-      acc[cur.namespace] = [];
+    if (!acc[cur._namespace]) {
+      acc[cur._namespace] = [];
     }
 
-    acc[cur.namespace].push(cur);
+    acc[cur._namespace].push(cur);
 
     return acc;
   }, {});
