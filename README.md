@@ -117,13 +117,13 @@ connect(io, sockets);
 * `io`: `socket.io` server class.
 * `sockets`: type `Array`, `required`. array of socket events created by `SocketEvent` class.
 
-### applyMiddlewares
+### applyMiddleware
 
 if you want to add same middlewares as head middlewares in socket events, it's better to use this function. this function add middlewares before all middlewares in socket events.
 
 #### Usage
 ```javascript
-applyMiddlewares(middlewares, socketsEvents);
+applyMiddleware(middlewares, socketsEvents);
 ```
 
 #### Parameters
@@ -135,5 +135,5 @@ applyMiddlewares(middlewares, socketsEvents);
 suppose that we have 2 middlewares and one socket event named foo. now we want add these two middlewares in `foo` socket event. in code language it will be something like this:
 
 ```javascript
-applyMiddlewares([ middleware1, middleware2 ], [ foo ]);
+applyMiddleware([ middleware1, middleware2 ], [ foo ]);
 ```

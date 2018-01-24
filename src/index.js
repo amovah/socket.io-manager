@@ -68,11 +68,11 @@ export function connect(io, sockets) {
   }
 }
 
-export function applyMiddlewares(middlewares, sockets) {
+export function applyMiddleware(middlewares, sockets) {
   return sockets.map(
     item => {
       item.middlewares.unshift(...middlewares);
-      return middlewares;
+      return item;
     }
   );
 }
