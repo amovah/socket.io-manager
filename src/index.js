@@ -31,6 +31,8 @@ export class SocketEvent {
   }
 
   attach(socket, nsp, io, ...args) {
+    socket.eventName = this._name;
+    
     let middlewares = this.middlewares.map(
       middleware => promisify(middleware)(socket, nsp, io, ...args)
     );
