@@ -30,18 +30,22 @@ export class SocketEvent {
     this._handler = handler;
   }
 
-  attach(socket, nsp, io, ...args) {
+  async attach(socket, nsp, io, ...args) {
     socket.eventName = this._name;
-    
+
     let middlewares = this.middlewares.map(
       middleware => promisify(middleware)(socket, nsp, io, ...args)
     );
 
-    let handler = this._handler;
+    try {
+      for (let middleware of middlewares) {
+        await middleware();
+      }
 
-    Promise.all(middlewares).then(() => {
-      handler(socket, nsp, io)(...args);
-    });
+      this._handler(socket, nsp, io)(...args);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
