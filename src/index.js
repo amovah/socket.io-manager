@@ -65,6 +65,10 @@ export function connect(io, sockets) {
 
     nsp.on('connect', socket => {
       for (let socketEvent of socketEvents) {
+        if (['connect', 'connection'].includes(socketEvent._name)) {
+          socketEvent.attach.call(socketEvent, socket, nsp, io);
+        }
+
         socket.on(
           socketEvent._name,
           socketEvent.attach.bind(socketEvent, socket, nsp, io)
