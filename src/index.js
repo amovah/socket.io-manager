@@ -63,7 +63,7 @@ export function connect(io, sockets) {
   for (let [namespace, socketEvents] of Object.entries(group)) {
     let nsp = io.of(namespace);
 
-    nsp.on('connection', socket => {
+    nsp.on('connect', socket => {
       for (let socketEvent of socketEvents) {
         socket.on(
           socketEvent._name,
