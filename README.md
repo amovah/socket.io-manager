@@ -40,10 +40,10 @@ let socket = new SocketEvent();
 socket
 .name('foo')
 .middleware(
-  (next, socket) => text => {
+  (next, { socket }) => text => {
     text === 'you can' ? next() : socket.emit('error', 'I can not do it');
   }
-).handler((socket, nsp) => text => {
+).handler(({ socket }, nsp) => text => {
   nsp.emit('foo', text);
 });
 ```
@@ -86,7 +86,7 @@ let socket = new SocketEvent();
     How to write a middleware ? it's simple. first look at this example.
 
     ```javascript
-    export default (next, socket, nsp, io) => (user, msg) => {
+    export default (next, { shared, socket, nsp, io }) => (user, msg) => {
       socket.user = user;
       msg = msg + user.name;
 
@@ -94,7 +94,7 @@ let socket = new SocketEvent();
     }
     ```
 
-    first, it takes 4 arguments, `next` calls next middleware or handler. `socket` obviously is socket object. `nsp` is current namespace `scoket.io` object. `io` is main `socket.io` object.
+    first, it takes 4 arguments, `next` calls next middleware or handler. `socket` obviously is socket object. `nsp` is current namespace `scoket.io` object. `io` is main `socket.io` object. shared is an `Object` which is created and shared when event is fired till event gets done.
 
     then it return a function that this function take some arguments. these are event data. for example if in client side I run this code, `socket.emit('foo', { name: 'ali' }, 'hey there')`, the second function take 2 arguments based on what I've sent to the event. `user` argument is `{ name: 'ali' }` and `msg` is `hey there`.
 

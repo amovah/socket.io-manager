@@ -1,4 +1,4 @@
-export default func => (socket, nsp, io, ...args) =>
+export default func => (obj, ...args) =>
   () => new Promise(resolve => {
-    func(resolve, socket, nsp, io)(...args);
+    func(resolve, obj)(...args);
   }).catch(err => { console.error(err); });

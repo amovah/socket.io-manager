@@ -30,19 +30,22 @@ export class SocketEvent {
     this._handler = handler;
   }
 
-  async attach(socket, nsp, io, ...args) {
+  async attach({ socket, nsp, io }, ...args) {
+    let shared = {};
     socket.eventName = this._name;
 
     let middlewares = this.middlewares.map(
-      middleware => promisify(middleware)(socket, nsp, io, ...args)
+      middleware => promisify(middleware)({ shared, socket, nsp, io }, ...args)
     );
 
     try {
       for (let middleware of middlewares) {
-        await middleware();
+        await middleware().catch(e => {
+          console.error(e);
+        });
       }
 
-      this._handler(socket, nsp, io)(...args);
+      this._handler({ shared, socket, nsp, io })(...args);
     } catch (e) {
       console.error(e);
     }
@@ -66,12 +69,12 @@ export function connect(io, sockets) {
     nsp.on('connect', socket => {
       for (let socketEvent of socketEvents) {
         if (['connect', 'connection'].includes(socketEvent._name)) {
-          socketEvent.attach.call(socketEvent, socket, nsp, io);
+          socketEvent.attach.call(socketEvent, { socket, nsp, io });
         }
 
         socket.on(
           socketEvent._name,
-          socketEvent.attach.bind(socketEvent, socket, nsp, io)
+          socketEvent.attach.bind(socketEvent, { socket, nsp, io })
         );
       }
     });
